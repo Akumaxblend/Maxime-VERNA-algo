@@ -15,22 +15,51 @@ struct Liste{
 struct DynaTableau{
     int* donnees;
     // your code
-};
+    int size;
+    int nbElem;
+};  
 
 
 void initialise(Liste* liste)
 {
-
+    liste->premier = nullptr;
 }
 
 bool est_vide(const Liste* liste)
 {
+    if(liste->premier == nullptr){
+
+        return true;
+    }
+    else
     return false;
 }
 
 void ajoute(Liste* liste, int valeur)
 {
+    Noeud * elem = new Noeud;
+    elem->donnee = valeur;
+    elem->suivant = nullptr;
 
+    if(est_vide(liste)){
+
+        liste->premier = elem;
+    }
+
+    else{
+
+        Noeud * target = liste->premier;
+
+    while (target->suivant != nullptr)
+    {
+        target = target->suivant;
+    }
+
+        target->suivant = elem;
+
+    }
+    
+    
 }
 
 void affiche(const Liste* liste)
@@ -55,6 +84,22 @@ void stocke(Liste* liste, int n, int valeur)
 
 void ajoute(DynaTableau* tableau, int valeur)
 {
+
+    if(tableau->nbElem >= tableau->size){ //Si le tableau est plein alors on alloue la mémoire supplémentaire
+
+        int * tmp = new int[tableau->size * 2]; //Tableau faisant 2 fois la taille riginale
+        tmp = tableau->donnees; //On copie les anciennes données dans le nouveau tableau
+
+        tableau->donnees = tmp; //On fait pointer le tableau vers le tableau plus grand
+
+        delete tmp; //Nettoyage mémoiiire
+
+        tableau->size *= 2; //Maintenant la taille est doublée :)
+
+    }
+
+    tableau->donnees[tableau->nbElem] = valeur; //Enfin, on ajoute la valeur dans la tableau
+    tableau->nbElem ++;
 
 }
 
