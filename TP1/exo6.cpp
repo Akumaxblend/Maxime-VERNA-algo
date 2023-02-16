@@ -62,24 +62,66 @@ void ajoute(Liste* liste, int valeur)
     
 }
 
-void affiche(const Liste* liste)
+void affiche(Liste* liste)
 {
+    Noeud * target = liste->premier;
+    while(target != nullptr){
 
+        cout << target->donnee << endl;
+        target = target->suivant;
+    }
 }
 
-int recupere(const Liste* liste, int n)
+int recupere(Liste* liste, int n)
 {
-    return 0;
+    Noeud * target = liste->premier;
+
+    for(int i = 0 ; i < n ; i ++){
+
+        if(target == nullptr){
+
+            return -1; 
+        }
+
+        target = target->suivant;
+        
+    }
+
+    return target->donnee;
 }
 
 int cherche(const Liste* liste, int valeur)
 {
+    int i = 1;
+    Noeud * target = liste->premier;
+
+    while(target != nullptr){
+
+        if(target->donnee == valeur){
+
+            return i;
+        }
+        target = target->suivant;
+        i++;
+    }
     return -1;
 }
 
 void stocke(Liste* liste, int n, int valeur)
 {
+    Noeud * target = liste->premier;
 
+    for (int i = 0 ; i < n-1 ; i++){
+
+    target = target->suivant;   
+
+        if(target == nullptr){
+
+            return;
+        }
+        
+    }
+    target->donnee = valeur;
 }
 
 void ajoute(DynaTableau* tableau, int valeur)
@@ -92,7 +134,7 @@ void ajoute(DynaTableau* tableau, int valeur)
 
         tableau->donnees = tmp; //On fait pointer le tableau vers le tableau plus grand
 
-        delete tmp; //Nettoyage mémoiiire
+        //delete tmp; //Nettoyage mémoiiire
 
         tableau->size *= 2; //Maintenant la taille est doublée :)
 
@@ -106,32 +148,50 @@ void ajoute(DynaTableau* tableau, int valeur)
 
 void initialise(DynaTableau* tableau, int capacite)
 {
-
+    tableau->donnees = new int[capacite];
+    tableau->size = capacite;
+    tableau->nbElem = 0;
 }
 
-bool est_vide(const DynaTableau* liste)
+bool est_vide(const DynaTableau* tableau)
 {
-    return false;
+    if(tableau->nbElem == 0) return true;
+    else return false;
 }
 
 void affiche(const DynaTableau* tableau)
 {
+    for(int i = 0; i< tableau->nbElem ; i++){
 
+        cout << tableau->donnees[i] << endl;
+    }
 }
 
 int recupere(const DynaTableau* tableau, int n)
 {
-    return 0;
+    if(n < tableau->size)
+    return tableau->donnees[n];
+
+    else return -1;
 }
 
 int cherche(const DynaTableau* tableau, int valeur)
 {
+    for(int i = 0 ; i < tableau->size ; i++){
+
+        if(tableau->donnees[i] == valeur) return i+1;
+        else i++;
+    }
     return -1;
 }
 
 void stocke(DynaTableau* tableau, int n, int valeur)
 {
+    if(n >= tableau->nbElem){
+        return;
+    }
 
+    tableau->donnees[n-1] = valeur;
 }
 
 //void pousse_file(DynaTableau* liste, int valeur)
@@ -173,7 +233,7 @@ int main()
 
     if (!est_vide(&tableau))
     {
-        std::cout << "Oups y a une anguille dans mon tableau" << std::endl;
+        std::cout << "Oups y a une anguille dans mon tableau1" << std::endl;
     }
 
     for (int i=1; i<=7; i++) {
