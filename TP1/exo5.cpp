@@ -18,9 +18,26 @@ int isMandelbrot(Point z, int n, Point point){
     // otherwise, process the square of z and recall
     // isMandebrot
 
+    if(n == 0){
 
+        if (z.length() > 2){
 
-    return 0;
+            return n;
+        }
+
+        else return 0;
+    }
+
+    if(z.length() > 2){
+
+        return n;
+    }
+
+    complexSquare(&z);
+    z.x += point.x;
+    z.y += point.y;
+    return isMandelbrot(z, n - 1, point);
+
 }
 
 int main(int argc, char *argv[])
