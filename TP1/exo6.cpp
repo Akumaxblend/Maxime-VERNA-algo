@@ -62,7 +62,7 @@ void ajoute(Liste* liste, int valeur)
     
 }
 
-void affiche(Liste* liste)
+void affiche(const Liste* liste)
 {
     Noeud * target = liste->premier;
     while(target != nullptr){
@@ -72,7 +72,7 @@ void affiche(Liste* liste)
     }
 }
 
-int recupere(Liste* liste, int n)
+int recupere(const Liste* liste, int n)
 {
     Noeud * target = liste->premier;
 
@@ -194,28 +194,62 @@ void stocke(DynaTableau* tableau, int n, int valeur)
     tableau->donnees[n-1] = valeur;
 }
 
-//void pousse_file(DynaTableau* liste, int valeur)
-void pousse_file(Liste* liste, int valeur)
+void pousse_file(DynaTableau* liste, int valeur)
+//void pousse_file(Liste* liste, int valeur)
 {
+    int * tmp = new int[liste->nbElem + 1];
+    for(int i = 0 ; i < liste->nbElem ; i++){
 
+        tmp[i+1] = liste->donnees[i];
+    }
+    tmp[0] = valeur;
+    liste->donnees = tmp;
 }
 
 //int retire_file(Liste* liste)
-int retire_file(Liste* liste)
+int retire_file(DynaTableau* liste)
 {
-    return 0;
+    if (liste->nbElem == 0) return 0;
+    
+    int * tmp = new int[liste->nbElem - 1];
+
+    for(int i = 0 ; i < liste->nbElem ; i++){
+
+        tmp[i] = liste->donnees[i+1];
+
+    }
+
+    int toReturn = liste->donnees[0];
+    liste->nbElem --;
+    return toReturn;
 }
 
-//void pousse_pile(DynaTableau* liste, int valeur)
-void pousse_pile(Liste* liste, int valeur)
+void pousse_pile(DynaTableau* liste, int valeur)
+//void pousse_pile(Liste* liste, int valeur)
 {
-
+    ajoute(liste, valeur);
 }
 
-//int retire_pile(DynaTableau* liste)
-int retire_pile(Liste* liste)
+int retire_pile(DynaTableau* liste)
+//int retire_pile(Liste* liste)
 {
-    return 0;
+    if(est_vide(liste)) return 0;
+    
+    int * tmp = new int[liste->nbElem - 1];
+
+    for(int i = 0 ; i < liste->nbElem ; i++){
+
+        tmp[i] = liste->donnees[i];
+    }
+
+    int toReturn = liste->donnees[liste->nbElem];
+
+    liste->donnees = tmp;
+
+    liste->nbElem --;
+    
+    return toReturn;
+
 }
 
 
@@ -270,11 +304,11 @@ int main()
     affiche(&tableau);
     std::cout << std::endl;
 
-    Liste pile; // DynaTableau pile;
-    Liste file; // DynaTableau file;
+    DynaTableau pile;
+    DynaTableau file;
 
-    initialise(&pile);
-    initialise(&file);
+    initialise(&pile,1);
+    initialise(&file,1);
 
     for (int i=1; i<=7; i++) {
         pousse_file(&file, i);

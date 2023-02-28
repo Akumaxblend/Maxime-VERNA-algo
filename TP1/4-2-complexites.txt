@@ -1,0 +1,20 @@
+Algorithme 5 : 
+
+Dans le pire des cas, complexité de n^2 : si aucun des nombres ne sont trués correctement alors les deux boucles comportent n instructions. Puisqu'elles sont imbriquées, on a n * n = n^2.
+Cas favorable : cas où le tableau est déjà trié de manière décroissante, et un tableau souple -> complexité n.
+
+Algorithme 6 :
+
+Complexité de min(m,n) : dans tous les cas on a m ou n instructions, en fonction du minimum des deux.
+
+Algorithme 7 : 
+
+Complexité de log(n). A chaque iteration, on divise le nombre potentiel d'instructions par 2.
+
+Algorithme 8 : 
+
+Lors du pire des cas, on pourrait se retrouver avec une complexité de n au lieu de log(n). (Dichotomique).
+
+Algorithme 9 :
+
+Complexité de n * log(n).
