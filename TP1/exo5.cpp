@@ -2,6 +2,12 @@
 #include <QApplication>
 #include <time.h>
 
+void complexSquare(Point * z){
+
+    z->x = z->x * z->x - z->y * z->y;
+
+    z->y = 2 * z->x * z-> y;
+}
 int isMandelbrot(Point z, int n, Point point){
     // recursiv Mandelbrot
 
@@ -11,6 +17,9 @@ int isMandelbrot(Point z, int n, Point point){
     // if Mandelbrot, return 1 or n (check the difference)
     // otherwise, process the square of z and recall
     // isMandebrot
+
+
+
     return 0;
 }
 

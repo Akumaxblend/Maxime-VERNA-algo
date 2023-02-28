@@ -209,7 +209,7 @@ void pousse_file(DynaTableau* liste, int valeur)
 //int retire_file(Liste* liste)
 int retire_file(DynaTableau* liste)
 {
-    if (liste->nbElem == 0) return 0;
+    if (est_vide(liste)) return 0;
     
     int * tmp = new int[liste->nbElem - 1];
 
@@ -219,7 +219,8 @@ int retire_file(DynaTableau* liste)
 
     }
 
-    int toReturn = liste->donnees[0];
+    int toReturn = liste->donnees[liste->nbElem-1];
+    liste->donnees = tmp;
     liste->nbElem --;
     return toReturn;
 }
@@ -237,7 +238,7 @@ int retire_pile(DynaTableau* liste)
     
     int * tmp = new int[liste->nbElem - 1];
 
-    for(int i = 0 ; i < liste->nbElem ; i++){
+    for(int i = 0 ; i < liste->nbElem - 1 ; i++){
 
         tmp[i] = liste->donnees[i];
     }
@@ -310,7 +311,7 @@ int main()
     initialise(&pile,1);
     initialise(&file,1);
 
-    for (int i=1; i<=7; i++) {
+    for (int i=1; i<=9; i++) {
         pousse_file(&file, i);
         pousse_pile(&pile, i);
     }

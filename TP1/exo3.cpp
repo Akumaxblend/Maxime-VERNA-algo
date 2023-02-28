@@ -12,6 +12,21 @@ int search(int value, Array& toSort, int size)
     // your code
     // check the last cell and if it does not correspond
     // then consider a smaller array when recalling search
+
+    if(size == 0){
+
+        if(toSort[size] == value){
+            return_and_display (0);
+        }
+        else return_and_display (-1);
+    }
+
+    if(toSort[size - 1] == value){
+
+        return_and_display(size-1);
+    }
+
+    return_and_display(search(value, toSort, size - 1));
 }
 
 int main(int argc, char *argv[])

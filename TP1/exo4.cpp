@@ -10,7 +10,24 @@ void allEvens(Array& evens, Array& array, int evenSize, int arraySize)
 
     // your code
 
-    return;
+    if(arraySize == 0){
+
+        if(array[0] % 2 == 0){
+
+            evens[evenSize - 1] = array[0];
+            evenSize ++;
+            return;
+        }
+        else return;
+    }
+
+    if(array[arraySize - 1] % 2 == 0){
+
+            evens[evenSize] = array[arraySize - 1];
+            evenSize ++;
+    }
+
+   allEvens(evens, array, evenSize, arraySize - 1);
 }
 
 int main(int argc, char *argv[])
