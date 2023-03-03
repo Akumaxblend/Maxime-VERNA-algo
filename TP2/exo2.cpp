@@ -8,16 +8,32 @@ MainWindow* w=nullptr;
 void insertionSort(Array& toSort){
 	Array& sorted=w->newArray(toSort.size());
 	sorted[0] = toSort[0];
+	int sortedSize = 1;
+	int targetIndex = -1;
 
 	for(int i = 1; i < toSort.size() ; i++){
 
-		for(int j = 0; j < toSort.size() ; j ++){
+		for(int j = 0; j < sortedSize; j ++){
 
 			if(toSort[i] < sorted[j]){
 
-				sorted.insert(j, toSort[i]);
+				targetIndex = j;
+				break;
+				
 			}
-			else(sorted[sorted.size()] = toSort[i]);
+		}
+
+		if(targetIndex != -1){
+
+			sorted.insert(targetIndex, toSort[i]);
+			targetIndex = -1;
+			sortedSize ++;
+		}
+		
+		else{
+
+			sorted[sortedSize] = toSort[i];
+			sortedSize ++;
 		}
 	}
 
