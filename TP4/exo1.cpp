@@ -75,12 +75,24 @@ void Heap::heapify(int heapSize, int nodeIndex)
 
 void Heap::buildHeap(Array& numbers)
 {
+	for(int i = 0 ; i < numbers.size() ; i++){
+
+		insertHeapNode(i, numbers[i]);
+	}
 
 }
 
 void Heap::heapSort()
 {
+	for(int i = this->size() - 1 ; i >= 0 ; i--){
 
+		int tmp = (*this)[0];
+		(*this)[0] = (*this)[i];
+		(*this)[i] = tmp;
+
+		this->heapify(i, 0);
+
+	}
 }
 
 int main(int argc, char *argv[])

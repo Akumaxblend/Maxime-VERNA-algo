@@ -40,12 +40,12 @@ void main_function(HuffmanNode*& huffmanTree)
     qDebug() << priorityMinHeap.toString().toStdString().c_str();
 
     huffmanTree = buildHuffmanTree(priorityMinHeap, heapSize);
-    huffmanTree->processCodes("");
-    string encoded = huffmanEncode(data, huffmanTree);
-    string decoded = huffmanDecode(encoded, *huffmanTree);
+    // huffmanTree->processCodes("");
+    // string encoded = huffmanEncode(data, huffmanTree);
+    // string decoded = huffmanDecode(encoded, *huffmanTree);
 
-    qDebug("Encoded: %s\n", encoded.c_str());
-    qDebug("Decoded: %s\n", decoded.c_str());
+    // qDebug("Encoded: %s\n", encoded.c_str());
+    // qDebug("Decoded: %s\n", decoded.c_str());
 }
 
 
@@ -59,6 +59,11 @@ void processCharFrequences(string data, Array& frequences)
 
     // Your code
     frequences.fill(0);
+
+    for(int i = 0 ; i< data.size() ; i++){
+
+        frequences[(int)(data.at(i))] ++;
+    }
 }
 
 void HuffmanHeap::insertHeapNode(int heapSize, HuffmanNode* newNode)
@@ -74,6 +79,15 @@ void HuffmanHeap::insertHeapNode(int heapSize, HuffmanNode* newNode)
 
     // Your code
     int i = heapSize;
+	(*this)[i] = newNode;
+
+	while(i > 0 && this->get(i)->frequences < this->get((i-1) / 2)->frequences){
+
+		swap(i, (i-1)/2);
+
+		i = (i-1) / 2;
+
+	}
 
 }
 
@@ -88,6 +102,19 @@ void buildHuffmanHeap(const Array& frequences, HuffmanHeap& priorityMinHeap, int
     // Your code
     heapSize = 0;
 
+    for(int i = 0 ; i < frequences.size() ; i++){
+
+		if(frequences[i] != 0){
+
+            HuffmanNode * toInsert = new HuffmanNode;
+            toInsert->character = (char)i;
+            toInsert->frequences = frequences[i];
+
+            priorityMinHeap.insertHeapNode(heapSize, toInsert);
+            heapSize ++;
+        }
+	}
+
 }
 
 void HuffmanHeap::heapify(int heapSize, int nodeIndex)
@@ -99,6 +126,36 @@ void HuffmanHeap::heapify(int heapSize, int nodeIndex)
       * you can use `this->swap(firstIndex, secondIndex)`
      **/
     // Your code
+
+    int i_max = nodeIndex;
+
+	if((nodeIndex * 2) + 1 < heapSize){
+
+		if(this->get((nodeIndex * 2) + 1) < this->get(i_max)){
+
+			i_max = (nodeIndex * 2) + 1;
+	}
+	
+
+	}if((nodeIndex * 2) + 2 < heapSize){
+
+		if (this->get((nodeIndex * 2) + 2) < this->get(i_max)){
+
+			i_max = (nodeIndex * 2) + 2;
+		}
+	}	
+
+	if(i_max != nodeIndex){
+
+		this->swap(i_max, nodeIndex);
+
+        // HuffmanNode* tmp = this->get(nodeIndex);
+		// (*this)[nodeIndex] = (*this)[i_max];
+		// (*this)[i_max] = tmp;
+
+		heapify(heapSize, i_max);
+	}
+	else return;
 
 }
 
@@ -112,6 +169,19 @@ HuffmanNode* HuffmanHeap::extractMinNode(int heapSize)
      **/
 
     // Your code
+
+    HuffmanNode * toReturn = new HuffmanNode;
+
+    toReturn->character = this->get(0)->character;
+    toReturn->frequences = this->get(0)->frequences;
+
+    this->swap(0, heapSize);
+
+    this->heapify(heapSize - 1, 0);
+
+    heapSize --;
+
+    return toReturn;
 }
 
 HuffmanNode* makeHuffmanSubTree(HuffmanNode* rightNode, HuffmanNode* leftNode)
@@ -123,7 +193,15 @@ HuffmanNode* makeHuffmanSubTree(HuffmanNode* rightNode, HuffmanNode* leftNode)
      * Return the new HuffmanNode* parent
      **/
     // Your code
-    return new HuffmanNode('\0');
+
+    HuffmanNode * parent = new HuffmanNode('\0');
+
+    parent->left = leftNode;
+    parent->right = rightNode;
+
+    parent->frequences = leftNode->frequences + rightNode->frequences;
+
+    return parent;
 }
 
 HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
@@ -136,7 +214,30 @@ HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
      **/
 
     // Your code
-    return new HuffmanNode('?');
+
+    HuffmanNode* node1 = new HuffmanNode;
+    HuffmanNode* node2 = new HuffmanNode;
+    HuffmanNode* parent = new HuffmanNode;
+    
+    while (heapSize > 1){
+
+        
+
+        node1 = priorityMinHeap.extractMinNode(heapSize);
+        node2 = priorityMinHeap.extractMinNode(heapSize);
+
+        parent = makeHuffmanSubTree(node1, node2);
+
+        priorityMinHeap.insertHeapNode(heapSize, parent);
+        
+        
+    }
+    
+    //HuffmanNode* toReturn = new HuffmanNode('?');
+    HuffmanNode* toReturn = priorityMinHeap.extractMinNode(heapSize);
+
+
+    return toReturn;
 }
 
 void HuffmanNode::processCodes(const std::string& baseCode)
