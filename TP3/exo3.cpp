@@ -21,13 +21,44 @@ struct SearchTreeNode : public Node
 
 	void insertNumber(int value) {
         // create a new node and insert it in right or left child
+
+        SearchTreeNode * toInsert = new SearchTreeNode(value);
+
+        this->left = toInsert;
     }
 
 	uint height() const	{
         // should return the maximum height between left child and
         // right child +1 for itself. If there is no child, return
         // just 1
-        return 1;
+        
+
+        if(!this){
+
+            return 0;
+        }
+
+        if(this->left == nullptr || this->right == nullptr){
+
+            return 1;
+        }
+
+
+        else{
+
+            uint lh = this->left->height();
+            uint rh = this->right->height();
+
+
+            if(lh > rh){
+
+                return lh + 1;
+            }
+
+            else return rh +1;
+
+        }
+
     }
 
 	uint nodesCount() const {

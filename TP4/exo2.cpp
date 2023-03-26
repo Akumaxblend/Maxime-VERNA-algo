@@ -40,12 +40,12 @@ void main_function(HuffmanNode*& huffmanTree)
     qDebug() << priorityMinHeap.toString().toStdString().c_str();
 
     huffmanTree = buildHuffmanTree(priorityMinHeap, heapSize);
-    // huffmanTree->processCodes("");
-    // string encoded = huffmanEncode(data, huffmanTree);
-    // string decoded = huffmanDecode(encoded, *huffmanTree);
+    huffmanTree->processCodes("");
+    string encoded = huffmanEncode(data, huffmanTree);
+    string decoded = huffmanDecode(encoded, *huffmanTree);
 
-    // qDebug("Encoded: %s\n", encoded.c_str());
-    // qDebug("Decoded: %s\n", decoded.c_str());
+    qDebug("Encoded: %s\n", encoded.c_str());
+    qDebug("Decoded: %s\n", decoded.c_str());
 }
 
 
@@ -111,9 +111,11 @@ void buildHuffmanHeap(const Array& frequences, HuffmanHeap& priorityMinHeap, int
             toInsert->frequences = frequences[i];
 
             priorityMinHeap.insertHeapNode(heapSize, toInsert);
-            heapSize ++;
+            heapSize++;
         }
 	}
+
+    
 
 }
 
@@ -175,11 +177,10 @@ HuffmanNode* HuffmanHeap::extractMinNode(int heapSize)
     toReturn->character = this->get(0)->character;
     toReturn->frequences = this->get(0)->frequences;
 
-    this->swap(0, heapSize);
+    this->swap(0, heapSize-1);
 
     this->heapify(heapSize - 1, 0);
 
-    heapSize --;
 
     return toReturn;
 }
@@ -224,11 +225,14 @@ HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
         
 
         node1 = priorityMinHeap.extractMinNode(heapSize);
+        heapSize--;
         node2 = priorityMinHeap.extractMinNode(heapSize);
+        heapSize--;
 
         parent = makeHuffmanSubTree(node1, node2);
 
         priorityMinHeap.insertHeapNode(heapSize, parent);
+        heapSize ++;
         
         
     }
@@ -251,6 +255,25 @@ void HuffmanNode::processCodes(const std::string& baseCode)
      **/
 
     // Your code
+    std::string newCode = baseCode;
+
+    while(!(this->isLeaf())){
+
+        if(this->left){
+
+            newCode += "0";
+            this->left->processCodes((const string&)newCode);
+        }
+
+        else if(this->right){
+
+            newCode += "1";
+            this->right->processCodes((const string&)newCode);
+        }
+    }
+    this->code = baseCode;
+    return;
+    
 }
 
 void HuffmanNode::fillCharactersArray(std::string charactersCodes[])
@@ -282,6 +305,14 @@ string huffmanEncode(const string& toEncode, HuffmanNode* huffmanTree)
     huffmanTree->fillCharactersArray(charactersCodes);
     string encoded = "";
 
+
+    for(int i = 0; i < toEncode.size(); i++){
+
+        encoded += charactersCodes[toEncode.at(i)];
+        
+    }
+
+
     return encoded;
 }
 
@@ -295,6 +326,28 @@ string huffmanDecode(const string& toDecode, const HuffmanNode& huffmanTreeRoot)
      **/
     // Your code
     string decoded = "";
+
+    //HuffmanNode target = huffmanTreeRoot;
+
+    for(int i = 0 ; i <toDecode.size() ; i++){
+
+        if(toDecode.at(i) == 0){
+
+            target = target.left;
+
+        }
+
+        else{
+
+            target = target.right;
+        }
+
+        if(target.isLeaf()){
+
+            decoded += target.character;
+            target = huffmanTreeRoot;
+        }
+    }
 
     return decoded;
 }
