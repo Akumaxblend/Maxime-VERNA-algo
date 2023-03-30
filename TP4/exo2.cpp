@@ -131,29 +131,17 @@ void HuffmanHeap::heapify(int heapSize, int nodeIndex)
 
     int i_max = nodeIndex;
 
-	if((nodeIndex * 2) + 1 < heapSize){
+    for(int i = nodeIndex; i < heapSize; i++) {
+        if(this->get(i)->frequences > this->get(i_max)->frequences) {
 
-		if(this->get((nodeIndex * 2) + 1) < this->get(i_max)){
+            i_max = i;
 
-			i_max = (nodeIndex * 2) + 1;
-	}
-	
-
-	}if((nodeIndex * 2) + 2 < heapSize){
-
-		if (this->get((nodeIndex * 2) + 2) < this->get(i_max)){
-
-			i_max = (nodeIndex * 2) + 2;
-		}
-	}	
+        }
+    }
 
 	if(i_max != nodeIndex){
 
 		this->swap(i_max, nodeIndex);
-
-        // HuffmanNode* tmp = this->get(nodeIndex);
-		// (*this)[nodeIndex] = (*this)[i_max];
-		// (*this)[i_max] = tmp;
 
 		heapify(heapSize, i_max);
 	}
@@ -174,8 +162,10 @@ HuffmanNode* HuffmanHeap::extractMinNode(int heapSize)
 
     HuffmanNode * toReturn = new HuffmanNode;
 
-    toReturn->character = this->get(0)->character;
-    toReturn->frequences = this->get(0)->frequences;
+    // toReturn->character = this->get(0)->character;
+    // toReturn->frequences = this->get(0)->frequences;
+    
+    toReturn = (*this)[0];
 
     this->swap(0, heapSize-1);
 
@@ -236,12 +226,12 @@ HuffmanNode* buildHuffmanTree(HuffmanHeap& priorityMinHeap, int heapSize)
         
         
     }
-    
-    //HuffmanNode* toReturn = new HuffmanNode('?');
-    HuffmanNode* toReturn = priorityMinHeap.extractMinNode(heapSize);
+
+    HuffmanNode* toReturn = priorityMinHeap[0];
 
 
     return toReturn;
+
 }
 
 void HuffmanNode::processCodes(const std::string& baseCode)
@@ -327,29 +317,32 @@ string huffmanDecode(const string& toDecode, const HuffmanNode& huffmanTreeRoot)
     // Your code
     string decoded = "";
 
-    //HuffmanNode target = huffmanTreeRoot;
+    const HuffmanNode * target = new HuffmanNode;
+
+    target = &huffmanTreeRoot;
 
     for(int i = 0 ; i <toDecode.size() ; i++){
 
         if(toDecode.at(i) == 0){
 
-            target = target.left;
+            target = target->left;
 
         }
 
         else{
 
-            target = target.right;
+            target = target->right;
         }
 
-        if(target.isLeaf()){
+        if(target->isLeaf()){
 
-            decoded += target.character;
-            target = huffmanTreeRoot;
+            decoded += target->character;
+            target = &huffmanTreeRoot;
         }
     }
 
     return decoded;
+
 }
 
 
