@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <string>
+#include <math.h>
 
 #include <tp5.h>
 
@@ -23,7 +24,15 @@ std::vector<string> TP5::names(
 unsigned long int hash(string key)
 {
     // return an unique hash id from key
-    return 0;
+
+    int toReturn = 0;
+
+    for(int i = 0 ; i < key.length ; i ++){
+
+        toReturn += key[key.length] * pow(128,i);
+    }
+
+    return toReturn;
 }
 
 struct MapNode : public BinaryTree
@@ -52,7 +61,12 @@ struct MapNode : public BinaryTree
      */
     void insertNode(MapNode* node)
     {
+        while(this->left && this->right){
 
+            this->left->insertNode(node);
+        }
+        this->left = node;
+        return;
     }
 
     void insertNode(string key, int value)
@@ -79,7 +93,15 @@ struct Map
      */
     void insert(string key, int value)
     {
+        MapNode * toInsert = new MapNode;
 
+        toInsert->value = value;
+        toInsert->key = key;
+        toInsert->left = nullptr;
+        toInsert->right = nullptr;
+
+        this->root->insertNode(toInsert);
+        return;
     }
 
     /**
@@ -89,6 +111,9 @@ struct Map
      */
     int get(string key)
     {
+        MapNode* target = root;
+
+        
         return -1;
     }
 
