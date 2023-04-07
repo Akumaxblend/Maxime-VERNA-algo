@@ -28,9 +28,9 @@ unsigned long int hash(string key)
 
     int toReturn = 0;
 
-    for(int i = 0 ; i < key.length ; i ++){
+    for(int i = 0 ; i < key.length() ; i ++){
 
-        toReturn += key[key.length] * pow(128,i);
+        toReturn += key[i] * pow(128,i);
     }
 
     return toReturn;
@@ -53,20 +53,25 @@ struct MapNode : public BinaryTree
         this->value = value;
         this->key_hash = hash(key);
 
-        this->left = this->right = nullptr;
+        this->left = nullptr;
+        this->right = nullptr;
     }
 
     /**
      * @brief insertNode insert a new node according to the key hash
      * @param node
      */
+
     void insertNode(MapNode* node)
     {
-        while(this->left && this->right){
+        while(this->left){
 
             this->left->insertNode(node);
         }
+        
+        this->left = new MapNode(" ",0);
         this->left = node;
+        
         return;
     }
 
@@ -92,17 +97,23 @@ struct Map
      * @param key
      * @param value
      */
+
     void insert(string key, int value)
     {
-        MapNode * toInsert = new MapNode;
+        //MapNode * toInsert = new MapNode(key, value);
 
-        toInsert->value = value;
-        toInsert->key = key;
-        toInsert->left = nullptr;
-        toInsert->right = nullptr;
+        if(!this->root){
 
-        this->root->insertNode(toInsert);
-        return;
+            this->root = new MapNode(key, value);
+        }
+
+        else{
+
+            this->root->insertNode(new MapNode(key, value));
+            return;
+        }
+
+        
     }
 
     /**
@@ -129,6 +140,7 @@ int main(int argc, char *argv[])
     std::vector<std::string> inserted;
 
     map.insert("Yolo", 20);
+    
     for (std::string& name : TP5::names)
     {
         if (rand() % 3 == 0)
